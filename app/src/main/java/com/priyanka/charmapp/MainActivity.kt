@@ -28,6 +28,12 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.cometchat.pro.core.AppSettings
 import com.cometchat.pro.core.CometChat
 import com.cometchat.pro.exceptions.CometChatException
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.auth.FirebaseAuth
+import com.priyanka.charmapp.authentication.presentation.LoginScreen
+import com.priyanka.charmapp.navigation.Navigation
 import com.priyanka.charmapp.ui.theme.CharmAppTheme
 import com.priyanka.charmchase.core.AppDetails
 import com.priyanka.charmchase.core.AppDetails.appID
@@ -35,8 +41,20 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    private lateinit var googleSignInClient: GoogleSignInClient
+    private lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        //googlesignin
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .requestIdToken(getString(R.string.google_client_id))
+            .build()
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
+
+        //initialize with firebase
+        auth = FirebaseAuth.getInstance()
 
 
         //initialize with cometchat
@@ -47,7 +65,7 @@ class MainActivity : ComponentActivity() {
         CometChat.init(this, appID, appSettings, object : CometChat.CallbackListener<String>() {
             override fun onSuccess(successMessage: String) {
                 Log.d(ContentValues.TAG, "Initialization completed successfully")
-                CometChat.setSource("ui-kit", "android", "kotlin")
+                CometChat.setSource("ui-kit","kotlin","hello")
             }
 
             override fun onError(e: CometChatException) {
@@ -63,7 +81,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    SplashScreen(navController = NavController(this))
+                    //SplashScreen(navController = NavController(this))
+                    Navigation {}
 
                 }
             }
@@ -77,19 +96,25 @@ fun SplashScreen(navController: NavController) {
     val context = LocalContext.current
     CharmAppTheme  {
         Column(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .background(Color.Black),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         )
         {
-            LottieAnimation(composition = composition, modifier = Modifier.size(400.dp)
+            LottieAnimation(composition = composition, modifier = Modifier
+                .size(400.dp)
                 .background(Color.Black),
             isPlaying = true,
             restartOnPlay = true,
             iterations = 5)
+            
+            Spacer(modifier = Modifier.height(240.dp))
                 Button(
                     onClick = {
+                        val loginNav = "LoginScreen"
+                        navController.navigate(loginNav)
                     },
                     shape = RoundedCornerShape(20.dp),
                     modifier = Modifier
