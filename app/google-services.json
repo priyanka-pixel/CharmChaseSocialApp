@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "568811095957",
+    "project_id": "socialcommunity-7c148",
+    "storage_bucket": "socialcommunity-7c148.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:568811095957:android:e3e6d0d9d4c58ee447d89c",
+        "android_client_info": {
+          "package_name": "com.priyanka.charmapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "568811095957-kltisveikd4tjdqlog3if29qcvav89gr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDomL8OcElloCsT3Pfx7jO0Sge7_dDYEKY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "568811095957-kltisveikd4tjdqlog3if29qcvav89gr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
