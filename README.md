@@ -7,6 +7,7 @@ The CharmChase app is a social networking platform designed to connect users wit
 - Firebase
 - Navigation Component
 - Modules
+- Lottie Animation
 
 #Features:
 
