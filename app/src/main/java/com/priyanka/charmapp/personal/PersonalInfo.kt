@@ -49,9 +49,6 @@ import com.priyanka.charmchase.core.AppDetails.apiKey
 import com.priyanka.charmchase.core.AppDetails.authKEY
 import java.io.ByteArrayOutputStream
 
-
-
-
 @Composable
 fun PersonalInfo(navController: NavController) {
     val primaryColor = Color(194, 68, 72)
