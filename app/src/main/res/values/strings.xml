@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" tools:ignore="MissingTranslation">CharmApp</string>
 
-    <string name="google_client_id" tools:ignore="MissingTranslation">614061709950-clkb2u114g28avtqsdc8jc8kj6l9spo5.apps.googleusercontent.com</string>
+    <string name="google_client_id" tools:ignore="MissingTranslation"></string>
     <string name="base_url" tools:ignore="MissingTranslation"></string>
     <string name="imageurl" tools:ignore="MissingTranslation">imageurl</string>
     <string name="displayname" tools:ignore="MissingTranslation">displayname</string>
