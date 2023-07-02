@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -12,9 +13,11 @@ import androidx.compose.runtime.R
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -22,7 +25,8 @@ import com.priyanka.charmapp.authentication.data.UserProfile
 
 @Composable
 fun ProfileImage(
-    onImageUrlSelected: (String) -> Unit, onImageUriSelected: (Uri) -> Unit
+    onImageUrlSelected: (String) -> Unit, onImageUriSelected: (Uri) -> Unit,
+    navController: NavController
 ) {
     var imageView by remember { mutableStateOf<Uri?>(null) }
     val context = LocalContext.current
@@ -53,6 +57,7 @@ fun ProfileImage(
                 .clip(CircleShape)
                 .width(128.dp)
                 .height(128.dp)
+                .background(Color.Gray)
                 .clickable {
                     launcher.launch("image/*")
                 },
@@ -72,7 +77,8 @@ fun ProfileImage(
             if (imageBitmap != null) {
                 val uid = Firebase.auth.uid?.lowercase()
                 uid?.let {
-                    uploadFile(context,it,
+
+                    uploadFile(navController,it,
                         imageBitmap,
                         userProfile = UserProfile(),
                         onComplete = {}

@@ -3,7 +3,4 @@
 
     <string name="google_client_id" tools:ignore="MissingTranslation"></string>
     <string name="base_url" tools:ignore="MissingTranslation"></string>
-    <string name="imageurl" tools:ignore="MissingTranslation">imageurl</string>
-    <string name="displayname" tools:ignore="MissingTranslation">displayname</string>
-    <string name="firstname" tools:ignore="MissingTranslation">firstname</string>
 </resources>

@@ -50,11 +50,9 @@ fun LoginScreen(
     navController: NavController,
     onSignIn: (GoogleSignInAccount?, String?) -> Unit
 ) {
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.arrow) )
     val composition2 by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.symbol) )
     val composition3 by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.googlelogo) )
     val context = LocalContext.current
-    val focusManager = LocalFocusManager.current
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val progressBarVisible = remember { mutableStateOf(false) }
@@ -66,9 +64,7 @@ fun LoginScreen(
     //Login Ui
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Blue)
+        modifier = Modifier.fillMaxSize()
     ) {
         Row(
             horizontalArrangement = Arrangement.Start,
@@ -94,13 +90,12 @@ fun LoginScreen(
         verticalArrangement = Arrangement.Bottom,
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.Black)
     )
     {
         Spacer(modifier = Modifier.height(50.dp))
         LottieAnimation(composition = composition2, modifier = Modifier
             .size(200.dp)
-            .background(Color.Black),
+            .background(Color.White),
             isPlaying = true,
             restartOnPlay = true,
             iterations = 5)
@@ -130,7 +125,7 @@ fun LoginScreen(
                 focusedBorderColor = Color.White
             ),
             singleLine = true,
-            shape = RoundedCornerShape(15.dp),
+            shape = RoundedCornerShape(20.dp),
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Next
@@ -148,7 +143,7 @@ fun LoginScreen(
                 focusedBorderColor = Color.White
             ),
             singleLine = true,
-            shape = RoundedCornerShape(15.dp),
+            shape = RoundedCornerShape(20.dp),
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Password,
@@ -161,9 +156,9 @@ fun LoginScreen(
         )
         Spacer(modifier = Modifier.height(10.dp))
         Row {
-            Spacer(modifier = Modifier.width(240.dp))
+            Spacer(modifier = Modifier.width(200.dp))
             Text(text = "Forgot password?",
-                color = Color.White,
+                color = Color.Red,
                 textAlign = TextAlign.End,
                 modifier = Modifier.clickable(
                     onClick = {
@@ -175,17 +170,17 @@ fun LoginScreen(
         Button(
             onClick = {
                 progressBarVisible.value = true
-                login(context, email, password, onLoginError = {}, onLoginSuccess = {})
+                login(navController, email, password, onLoginError = {}, onLoginSuccess = {})
             },
             shape = RoundedCornerShape(20.dp),
             modifier = Modifier
                 .width(350.dp)
                 .height(60.dp)
                 .padding(top = 16.dp),
-            colors = ButtonDefaults.buttonColors(backgroundColor =Color.White)
+            colors = ButtonDefaults.buttonColors(backgroundColor =Color.Black)
 
         ) {
-            Text(text = "LOGIN", color = Color.Black)
+            Text(text = "LOGIN", color = Color.White)
         }
         Button(
             onClick = {
@@ -196,32 +191,31 @@ fun LoginScreen(
                 .height(60.dp)
                 .padding(top = 16.dp),
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = Color.White,
+                backgroundColor = Color.Black,
                 contentColor = Color.White
             ),
             shape = RoundedCornerShape(20.dp)
         )
         {
-            LottieAnimation(composition = composition3, modifier = Modifier.size(200.dp)
-                .background(Color.White),
+            LottieAnimation(composition = composition3, modifier = Modifier.size(50.dp)
+                .background(Color.Black),
                 isPlaying = true,
                 restartOnPlay = true,
                 iterations = 5)
 
             Text(text = "Google Sign In", color = Color.White)
         }
-        Spacer(modifier = Modifier.height(100.dp))
+        Spacer(modifier = Modifier.height(20.dp))
         Row {
             Text(text = "Not a member?")
             Spacer(modifier = Modifier.width(5.dp))
             Text(text = "Register Now",
-                color = Color.Black,
+                color = Color.Blue,
                 textAlign = TextAlign.End,
                 modifier = Modifier.clickable(
                     onClick = {
-                        //context.startActivity(
-                            //Intent(context, RegistrationActivity::class.java)
-
+                        val SignUp = "signup"
+                        navController.navigate(SignUp)
                     }
                 ))
         }
@@ -255,7 +249,7 @@ fun handleSignInResult(
     }
 }
 private fun loginWithCometChatId(
-    context: Context,
+    navController: NavController,
     uid: String,
     onLoginSuccess: (Any?) -> Unit,
     onLoginError: (String) -> Unit
@@ -263,7 +257,9 @@ private fun loginWithCometChatId(
     CometChat.login(uid, apiKey, object : CometChat.CallbackListener<User>() {
         override fun onSuccess(user: User) {
             onLoginSuccess{}
-           // context.startActivity(Intent(context, ConversationActivity::class.java))
+            val MainScreen = "MainScreen"
+            navController.navigate(MainScreen)
+
         }
         override fun onError(e: CometChatException) {
             e.message?.let { onLoginError(it) }
@@ -274,7 +270,7 @@ private fun loginWithCometChatId(
 
 //login with firebase
 private fun performLogin(
-    context: Context,
+    navController: NavController,
     email: String,
     password: String,
     onLoginSuccess: (String) -> Unit,
@@ -284,7 +280,8 @@ private fun performLogin(
     auth.signInWithEmailAndPassword(email, password)
         .addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                //context.startActivity(Intent(context, ConversationActivity::class.java))
+                val MainScreen = "MainScreen"
+                navController.navigate(MainScreen)
                 task.result?.user?.uid?.let { onLoginSuccess(it) }
             } else {
                 println("error")
@@ -295,14 +292,14 @@ private fun performLogin(
 
 //login with both firebase and cometchat
 private fun login(
-    context: Context,
+    navController: NavController,
     email: String,
     password: String,
     onLoginSuccess: (Any?) -> Unit,
     onLoginError: (String) -> Unit
 ) {
-    performLogin(context, email, password, onLoginSuccess = { uid ->
-        loginWithCometChatId(context, uid, onLoginSuccess, onLoginError)
+    performLogin(navController, email, password, onLoginSuccess = { uid ->
+        loginWithCometChatId(navController, uid, onLoginSuccess, onLoginError)
     }) { errorMessage ->
         print(errorMessage)
     }

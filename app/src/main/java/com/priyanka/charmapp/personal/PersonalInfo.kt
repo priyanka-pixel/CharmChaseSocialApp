@@ -102,7 +102,7 @@ fun PersonalInfo(navController: NavController) {
             imageUrl = selectedUrl
         }, onImageUriSelected = { selectedUri ->
             uri = selectedUri
-        })
+        },navController)
         // First name
         Spacer(modifier = Modifier.height(9.dp))
         OutlinedTextField(value = firstName,
@@ -179,7 +179,7 @@ fun PersonalInfo(navController: NavController) {
                 val imageBitmap = uri?.let { loadBitmapFromUri(context, uri = it) }
                 uid?.let {
                     if (imageBitmap != null) {
-                        uploadFile(context,uid, imageBitmap = imageBitmap, userProfile = UserProfile(
+                        uploadFile(navController,uid, imageBitmap = imageBitmap, userProfile = UserProfile(
                             imageUrl,
                             firstName,
                             lastName,
@@ -188,7 +188,7 @@ fun PersonalInfo(navController: NavController) {
                         ), onComplete = {profileUserwithCometChat(
                             uid = uid,
                             firstname = firstName,
-                            context = context,
+                           navController,
                             imageurl = imageUrl,
                             onRegisterError = {}
                         )}) {}
@@ -211,7 +211,7 @@ fun PersonalInfo(navController: NavController) {
 }
 
 fun uploadFile(
-    context: Context,
+   navController: NavController,
     uid: String,
     imageBitmap: Bitmap?,
     userProfile: UserProfile,
@@ -219,7 +219,7 @@ fun uploadFile(
     onError: (String) -> Unit
 ) {
     val storage = Firebase.storage.reference
-    val fileRef = storage.child("profiles2/$uid/$uid.jpeg")
+    val fileRef = storage.child("profiles/$uid/$uid.jpeg")
     val metaData = StorageMetadata.Builder().setContentType("image/jpeg").build()
     val baos = ByteArrayOutputStream()
     imageBitmap?.compress(Bitmap.CompressFormat.JPEG, 80, baos)
@@ -241,7 +241,7 @@ fun uploadFile(
             firestore.collection("users").document(uid).set(user).addOnSuccessListener {
                 // Handle successful Firestore update
                 onComplete{}
-                profileUserwithCometChat(uid, userProfile.displayName, context,imageUrl,onComplete,)
+                profileUserwithCometChat(uid, userProfile.displayName, navController,imageUrl,onComplete,)
 
             }.addOnFailureListener { exception ->
                 // Handle Firestore update failure
@@ -269,7 +269,7 @@ fun loadBitmapFromUri(context: Context, uri: Uri): Bitmap? {
 private fun profileUserwithCometChat(
     uid: String,
     firstname: String,
-    context: Context,
+    navController: NavController,
     imageurl: String,
     onRegisterError: (String) -> Unit
 ) {
@@ -280,7 +280,8 @@ private fun profileUserwithCometChat(
     CometChat.createUser(user, apiKey, object : CometChat.CallbackListener<User>() {
         override fun onSuccess(user: User) {
             //  onRegisterComplete()
-          //  context.startActivity(Intent(context, ConversationActivity::class.java))
+          val MainScreen = "MainScreen"
+            navController.navigate(MainScreen)
         }
         override fun onError(e: CometChatException) {
             e.message?.let { onRegisterError(it) }
@@ -290,7 +291,6 @@ private fun profileUserwithCometChat(
 }
 
 private fun loginWithCometChat(
-    context: Context,
     uid: String,
 ) {
     CometChat.login(authKEY,uid,object :CometChat.CallbackListener<User>(){

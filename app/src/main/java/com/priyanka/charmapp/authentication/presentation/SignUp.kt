@@ -1,7 +1,6 @@
 package com.priyanka.charmapp.authentication.presentation
 
 import android.content.Context
-import android.content.Intent
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -9,7 +8,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.R
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -37,7 +35,7 @@ import com.cometchat.pro.models.User
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.FirebaseAuth
-import com.priyanka.charmapp.MainActivity
+import com.priyanka.charmapp.R
 import com.priyanka.charmapp.authentication.presentation.components.ProgressBar
 import com.priyanka.charmchase.core.AppDetails.authKEY
 
@@ -45,7 +43,6 @@ import com.priyanka.charmchase.core.AppDetails.authKEY
 fun SignUp(navController: NavController,
            onSignIn: (GoogleSignInAccount?, String?) -> Unit
 ) {
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(com.priyanka.charmapp.R.raw.arrow) )
     val composition2 by rememberLottieComposition(LottieCompositionSpec.RawRes(com.priyanka.charmapp.R.raw.symbol) )
     val composition3 by rememberLottieComposition(LottieCompositionSpec.RawRes(com.priyanka.charmapp.R.raw.googlelogo) )
     var email by remember { mutableStateOf("") }
@@ -70,9 +67,11 @@ fun SignUp(navController: NavController,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(60.dp)
-                .padding(start = 10.dp)
-        ) {
-            Image(painterResource(id = com.priyanka.charmapp.R.drawable.baseline_arrow_back_ios_24),
+                .padding(start = 0.dp)
+        )
+        {
+            Image(
+                painterResource(id = R.drawable.baseline_arrow_back_ios_24),
                 contentDescription = "",
                 contentScale = ContentScale.FillWidth,
                 alignment = Alignment.TopEnd,
@@ -91,12 +90,12 @@ fun SignUp(navController: NavController,
         LottieAnimation(composition = composition2, modifier = Modifier
             .width(500.dp)
             .size(200.dp)
-            .background(Color.Blue),
+            .background(Color.White),
             isPlaying = true,
             restartOnPlay = true,
             iterations = 5)
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(9.dp))
         Text(
             text = "SignUp an account",
             fontWeight = FontWeight.Bold,
@@ -115,7 +114,7 @@ fun SignUp(navController: NavController,
                 focusedBorderColor = primaryColor
             ),
             singleLine = true,
-            shape = RoundedCornerShape(8.dp),
+            shape = RoundedCornerShape(20.dp),
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
             modifier = Modifier
                 .width(350.dp)
@@ -131,7 +130,7 @@ fun SignUp(navController: NavController,
                 focusedBorderColor = primaryColor
             ),
             singleLine = true,
-            shape = RoundedCornerShape(8.dp),
+            shape = RoundedCornerShape(20.dp),
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password),
             modifier = Modifier
@@ -148,7 +147,7 @@ fun SignUp(navController: NavController,
                 focusedBorderColor = primaryColor
             ),
             singleLine = true,
-            shape = RoundedCornerShape(8.dp),
+            shape = RoundedCornerShape(20.dp),
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password),
             modifier = Modifier
@@ -158,16 +157,16 @@ fun SignUp(navController: NavController,
         )
         Button(
             onClick = {
-                registerUserwithFirebase(email, password, context, onComplete = {}, onError = {})
+                registerUserwithFirebase(email, password, navController, onComplete = {}, onError = {})
             },
-            shape = RoundedCornerShape(8.dp),
+            shape = RoundedCornerShape(20.dp),
             enabled = email.isNotEmpty() && password.isNotEmpty() && ConfirmPassword.isNotEmpty(),
             modifier = Modifier
                 .width(350.dp)
                 .height(60.dp)
                 .padding(top = 16.dp),
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = primaryColor,
+                backgroundColor = Color.Black,
                 contentColor = Color.White
             ),
 
@@ -186,50 +185,32 @@ fun SignUp(navController: NavController,
                 backgroundColor = Color.Black,
                 contentColor = Color.White
             ),
-            shape = RoundedCornerShape(8.dp)
+            shape = RoundedCornerShape(20.dp)
         )
         {
-            LottieAnimation(composition = composition3, modifier = Modifier
-                .width(500.dp)
-                .size(200.dp)
-                .background(Color.Blue),
+            LottieAnimation(composition = composition3, modifier = Modifier.size(50.dp)
+                .background(Color.Black),
                 isPlaying = true,
                 restartOnPlay = true,
                 iterations = 5)
 
-            Text(text = "Google Sign In")
+            Text(text = "Google Sign Up", color = Color.White)
         }
-        Spacer(modifier = Modifier.height(30.dp))
+        Spacer(modifier = Modifier.height(10.dp))
         Text(
-            text = "By signing up, you acknowledge that you have read the ",
+            text = "By signing up, you acknowledge that you have read the " +
+                    "Privacy Policy" + " and agree to our",
             fontWeight = FontWeight.Normal,
-            fontSize = 15.sp,
+            fontSize = 9.sp,
             color = Color.Gray,
             fontFamily = FontFamily.Default
         )
         Row {
             Text(
-                text = "Privacy Policy",
-                color = primaryColor,
-                fontWeight = FontWeight.Normal,
-                fontSize = 15.sp,
-                modifier = Modifier.clickable(
-                    onClick = {
-                    })
-            )
-            Spacer(modifier = Modifier.width(5.dp))
-            Text(
-                text = "and agree to our",
-                color = Color.Gray,
-                fontFamily = FontFamily.Default,
-                fontWeight = FontWeight.Normal,
-                fontSize = 15.sp,
-            )
-            Text(
                 text = "Terms of Service.",
-                color = primaryColor,
+                color = Color.Gray,
                 fontWeight = FontWeight.Normal,
-                fontSize = 15.sp,
+                fontSize = 9.sp,
                 modifier = Modifier.clickable(
                     onClick = {
                     })
@@ -241,18 +222,18 @@ fun SignUp(navController: NavController,
                 text = "Already have an account?",
                 color = Color.Gray,
                 fontWeight = FontWeight.Normal,
-                fontSize = 15.sp,
+                fontSize = 9.sp,
                 fontFamily = FontFamily.Default
             )
             Spacer(modifier = Modifier.width(5.dp))
             Text(text = "Login",
-                color = primaryColor,
+                color = Color.Blue,
                 fontWeight = FontWeight.Normal,
-                fontSize = 15.sp,
+                fontSize = 10.sp,
                 modifier = Modifier.clickable(
                     onClick = {
-                        //login(user = User(),context)
-                        context.startActivity(Intent(context, MainActivity::class.java))
+                        val loginNav = "LoginScreen"
+                        navController.navigate(loginNav)
                     }
                 ))
         }
@@ -264,7 +245,7 @@ fun SignUp(navController: NavController,
 private fun registerUserwithFirebase(
     email: String,
     password: String,
-    context: Context,
+    navController: NavController,
     onComplete: () -> Unit,
     onError: (String) -> Unit
 ) {
@@ -272,8 +253,10 @@ private fun registerUserwithFirebase(
         .addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 onComplete()
+                val  PersonalInfo = "personalInfo"
+                navController.navigate(PersonalInfo)
                 //context.startActivity(Intent(context, ProfileActivity::class.java))
-                //task.result?.user?.uid?.let{onComplete()}
+               // task.result?.user?.uid?.let{onComplete()}
             } else {
                 onError(task.exception?.message ?: "Error")
                 //onComplete(false, task.exception?.message)
@@ -283,6 +266,7 @@ private fun registerUserwithFirebase(
 fun login(user: User, context: Context) {
     CometChat.login(user.getUid(), authKEY, object : CometChat.CallbackListener<User>() {
         override fun onSuccess(user: User) {
+
            // context.startActivity(Intent(context, ConversationActivity::class.java))
         }
 

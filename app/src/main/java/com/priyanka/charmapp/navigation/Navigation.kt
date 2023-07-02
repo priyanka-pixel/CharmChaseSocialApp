@@ -23,7 +23,6 @@ fun Navigation(toggleTheme: () -> Unit) {
     val Forgotpassword = "forgotPassword"
     val personalInfo = "personalInfo"
     val Mainscreen = "MainScreen"
-    val context = LocalContext.current
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = onBoardingNav) {
 

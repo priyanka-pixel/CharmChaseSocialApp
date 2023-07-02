@@ -93,7 +93,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun SplashScreen(navController: NavController) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.symbol) )
-    val context = LocalContext.current
     CharmAppTheme  {
         Column(
             modifier = Modifier
@@ -110,7 +109,7 @@ fun SplashScreen(navController: NavController) {
             restartOnPlay = true,
             iterations = 5)
             
-            Spacer(modifier = Modifier.height(240.dp))
+            Spacer(modifier = Modifier.height(150.dp))
                 Button(
                     onClick = {
                         val loginNav = "LoginScreen"
@@ -128,6 +127,8 @@ fun SplashScreen(navController: NavController) {
                 Spacer(modifier = Modifier.width(10.dp))
                 Button(
                     onClick = {
+                        val SignUp = "SignUp"
+                        navController.navigate(SignUp)
 
                     },
                     shape = RoundedCornerShape(20.dp),
