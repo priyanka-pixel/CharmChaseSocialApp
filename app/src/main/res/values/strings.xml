@@ -1,6 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" tools:ignore="MissingTranslation">CharmApp</string>
 
-    <string name="google_client_id" tools:ignore="MissingTranslation"></string>
-    <string name="base_url" tools:ignore="MissingTranslation"></string>
+    <string name="google_client_id" tools:ignore="MissingTranslation">94214065876-dis1mqrs3opfu8eph1hsfsdsv105jm9m.apps.googleusercontent.com</string>
+    <string name="base_url" tools:ignore="MissingTranslation">gs://charm-chase.appspot.com/</string>
+   '
 </resources>

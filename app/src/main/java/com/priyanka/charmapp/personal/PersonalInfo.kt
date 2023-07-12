@@ -1,28 +1,21 @@
 package com.priyanka.charmapp.personal
 
+import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
-import android.os.Bundle
 import android.util.Log
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -33,7 +26,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import coil.compose.rememberImagePainter
 import com.cometchat.pro.core.CometChat
 import com.cometchat.pro.exceptions.CometChatException
 import com.cometchat.pro.models.User
@@ -226,7 +218,7 @@ fun uploadFile(
     val data = baos.toByteArray()
 
     val uploadTask = fileRef.putBytes(data, metaData)
-    uploadTask.addOnSuccessListener { taskSnapshot ->
+    uploadTask.addOnSuccessListener { taskSnapshot_ ->
         fileRef.downloadUrl.addOnSuccessListener { downloadUrl ->
             val imageUrl = downloadUrl.toString()
             val firestore = Firebase.firestore
@@ -241,7 +233,7 @@ fun uploadFile(
             firestore.collection("users").document(uid).set(user).addOnSuccessListener {
                 // Handle successful Firestore update
                 onComplete{}
-                profileUserwithCometChat(uid, userProfile.displayName, navController,imageUrl,onComplete,)
+                profileUserwithCometChat(uid, userProfile.displayName, navController,imageUrl,onComplete)
 
             }.addOnFailureListener { exception ->
                 // Handle Firestore update failure
@@ -278,10 +270,11 @@ private fun profileUserwithCometChat(
     user.name = firstname
     user.avatar = imageurl
     CometChat.createUser(user, apiKey, object : CometChat.CallbackListener<User>() {
+        @SuppressLint("SuspiciousIndentation")
         override fun onSuccess(user: User) {
             //  onRegisterComplete()
-          val MainScreen = "MainScreen"
-            navController.navigate(MainScreen)
+          val mainScreen = "MainScreen"
+            navController.navigate(mainScreen)
         }
         override fun onError(e: CometChatException) {
             e.message?.let { onRegisterError(it) }
