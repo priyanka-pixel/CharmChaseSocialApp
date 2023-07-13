@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -29,6 +30,7 @@ import androidx.navigation.NavController
 import com.cometchat.pro.core.CometChat
 import com.cometchat.pro.exceptions.CometChatException
 import com.cometchat.pro.models.User
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -39,11 +41,19 @@ import com.priyanka.charmapp.authentication.data.UserProfile
 import com.priyanka.charmapp.authentication.presentation.components.ProgressBar
 import com.priyanka.charmchase.core.AppDetails.apiKey
 import com.priyanka.charmchase.core.AppDetails.authKEY
+import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.datetime.date.datepicker
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import java.io.ByteArrayOutputStream
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.*
 
+@OptIn(ExperimentalPermissionsApi::class)
+@SuppressLint("NewApi")
 @Composable
 fun PersonalInfo(navController: NavController) {
-    val primaryColor = Color(194, 68, 72)
+    val primaryColor = Color.Black
     var imageUrl by remember { mutableStateOf("") }
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
@@ -53,6 +63,17 @@ fun PersonalInfo(navController: NavController) {
     val context = LocalContext.current
     var uri by remember { mutableStateOf<Uri?>(null) }
 
+    var pickedDate by remember {
+        mutableStateOf(LocalDate.now())
+    }
+    val formattedDate by remember {
+        derivedStateOf {
+            DateTimeFormatter
+                .ofPattern("MMM dd yyyy")
+                .format(pickedDate)
+        }
+    }
+    val dateDialogState = rememberMaterialDialogState()
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxSize()
@@ -94,10 +115,39 @@ fun PersonalInfo(navController: NavController) {
             imageUrl = selectedUrl
         }, onImageUriSelected = { selectedUri ->
             uri = selectedUri
-        },navController)
+        }, navController)
+        // Date of Birth
+        Spacer(modifier = Modifier.height(9.dp))
+        Button(onClick = {
+            dateDialogState.show()
+        }) {
+            Text(text = "Birth date")
+        }
+        Text(text = formattedDate)
+
+        MaterialDialog(
+            dialogState = dateDialogState,
+            buttons = {
+                positiveButton(text = "Ok") {
+                    // Toast("clicked ok").show()
+                }
+                negativeButton(text = "Cancel")
+            }
+        ) {
+            datepicker(
+                initialDate = LocalDate.now(),
+                title = "Pick a date",
+//            allowedDateValidator = {
+//                it.dayOfMonth % 2 == 1
+//            }
+            ) {
+                pickedDate = it
+            }
+        }
         // First name
         Spacer(modifier = Modifier.height(9.dp))
-        OutlinedTextField(value = firstName,
+        OutlinedTextField(
+            value = firstName,
             onValueChange = { firstName = it },
             placeholder = { Text(text = "First Name") },
             colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -114,7 +164,8 @@ fun PersonalInfo(navController: NavController) {
         )
         Spacer(modifier = Modifier.height(9.dp))
         // Last name
-        OutlinedTextField(value = lastName,
+        OutlinedTextField(
+            value = lastName,
             onValueChange = { lastName = it },
             placeholder = { Text(text = "Last Name") },
             colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -131,7 +182,8 @@ fun PersonalInfo(navController: NavController) {
         )
         Spacer(modifier = Modifier.height(9.dp))
         // Seeking
-        OutlinedTextField(value = seeking,
+        OutlinedTextField(
+            value = seeking,
             onValueChange = { seeking = it },
             placeholder = { Text(text = "Seeking") },
             colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -148,7 +200,8 @@ fun PersonalInfo(navController: NavController) {
         )
         Spacer(modifier = Modifier.height(9.dp))
         // About me
-        OutlinedTextField(value = aboutMe,
+        OutlinedTextField(
+            value = aboutMe,
             onValueChange = { aboutMe = it },
             placeholder = { Text(text = "About Me") },
             colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -165,25 +218,34 @@ fun PersonalInfo(navController: NavController) {
         if (isLoading) {
             ProgressBar()
         }
+        RequestPermission(navController, permission = "", rationaleMessage = "")
+        Spacer(modifier = Modifier.height(9.dp))
         Button(
             onClick = {
                 val uid = Firebase.auth.uid?.lowercase()
                 val imageBitmap = uri?.let { loadBitmapFromUri(context, uri = it) }
                 uid?.let {
                     if (imageBitmap != null) {
-                        uploadFile(navController,uid, imageBitmap = imageBitmap, userProfile = UserProfile(
-                            imageUrl,
-                            firstName,
-                            lastName,
-                            seeking,
-                            aboutMe
-                        ), onComplete = {profileUserwithCometChat(
-                            uid = uid,
-                            firstname = firstName,
-                           navController,
-                            imageurl = imageUrl,
-                            onRegisterError = {}
-                        )}) {}
+                        uploadFile(navController,
+                            uid,
+                            imageBitmap = imageBitmap,
+                            userProfile = UserProfile(
+                                imageUrl,
+                                firstName,
+                                lastName,
+                                seeking,
+                                aboutMe,
+                                formattedDate
+                            ),
+                            onComplete = {
+                                profileUserwithCometChat(
+                                    uid = uid,
+                                    firstname = firstName,
+                                    navController,
+                                    imageurl = imageUrl,
+                                    onRegisterError = {}
+                                )
+                            }) {}
                     }
                 }
             },
@@ -200,8 +262,8 @@ fun PersonalInfo(navController: NavController) {
             Text(text = "Looks Great!", color = Color.White)
         }
     }
-}
 
+}
 fun uploadFile(
    navController: NavController,
     uid: String,
@@ -228,7 +290,8 @@ fun uploadFile(
                 "firstName" to userProfile.firstName,
                 "lastName" to userProfile.lastName,
                 "seeking" to userProfile.seeking,
-                "aboutMe" to userProfile.aboutMe
+                "aboutMe" to userProfile.aboutMe,
+                "formattedDate" to userProfile.formattedDate
             )
             firestore.collection("users").document(uid).set(user).addOnSuccessListener {
                 // Handle successful Firestore update

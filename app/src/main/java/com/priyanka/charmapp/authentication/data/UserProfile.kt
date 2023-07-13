@@ -1,5 +1,7 @@
 package com.priyanka.charmapp.authentication.data
 
+import java.util.*
+
 data class UserProfile(
     var imageUrl: String = "",
     var displayName: String = "",
@@ -7,12 +9,5 @@ data class UserProfile(
     var lastName: String = "",
     var aboutMe: String = "",
     var seeking: String = "",
-//    val age: Int,
-//    val horoscope: String = "",
-)
-data class PartnerSuggestion(
-    val name: String,
-    val age: Int,
-    val horoscope: String,
-    // Other suggestion attributes
+    val formattedDate: String = "",
 )

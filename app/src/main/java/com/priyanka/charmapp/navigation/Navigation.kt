@@ -8,13 +8,18 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.cometchat.pro.models.User
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.priyanka.charmapp.MainScreens.bottombar.MainScreen
+import com.priyanka.charmapp.MainScreens.presentation.More
 import com.priyanka.charmapp.SplashScreen
 import com.priyanka.charmapp.authentication.presentation.LoginScreen
 import com.priyanka.charmapp.authentication.presentation.SignUp
 import com.priyanka.charmapp.personal.PersonalInfo
+import com.priyanka.charmapp.personal.RequestPermission
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun Navigation(toggleTheme: () -> Unit) {
     val onBoardingNav = "onBoardingScreen"
@@ -23,6 +28,8 @@ fun Navigation(toggleTheme: () -> Unit) {
     val Forgotpassword = "forgotPassword"
     val personalInfo = "personalInfo"
     val Mainscreen = "MainScreen"
+    val more = "More"
+    val RequestPermission = "RequestPermission"
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = onBoardingNav) {
 
@@ -55,5 +62,11 @@ fun Navigation(toggleTheme: () -> Unit) {
     }
         composable(route = Mainscreen){
             MainScreen(navController)
+        }
+        composable(route = RequestPermission){
+            RequestPermission(navController, permission = "", rationaleMessage = "")
+        }
+        composable(route = more){
+            More(navController, profileImageUrl = "", onProfileImageClick = {}, onSettingsClick = {}, onAboutUsClick = {}, onLogoutClick = {}, onDeleteAccountClick = {})
         }
 }}

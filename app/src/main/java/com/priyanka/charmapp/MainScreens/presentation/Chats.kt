@@ -118,7 +118,7 @@ fun SearchBar(modifier: Modifier = Modifier) {
 
 
 fun fetchConversations(conversationList: MutableList<Conversation>, loading: MutableState<Boolean>) {
-    val conversationsRequest = ConversationsRequest.ConversationsRequestBuilder().setLimit(30).build()
+    val conversationsRequest = ConversationsRequest.ConversationsRequestBuilder().setLimit(20).build()
 
     conversationsRequest.fetchNext(object : CometChat.CallbackListener<List<Conversation>>() {
         override fun onSuccess(conversations: List<Conversation>) {

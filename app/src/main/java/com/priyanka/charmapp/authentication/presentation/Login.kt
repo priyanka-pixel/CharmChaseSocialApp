@@ -170,7 +170,9 @@ fun LoginScreen(
         Button(
             onClick = {
                 progressBarVisible.value = true
-                login(navController, email, password, onLoginError = {}, onLoginSuccess = {})
+                login(navController, email, password, onLoginError = {"Error"}, onLoginSuccess = {
+
+                })
             },
             shape = RoundedCornerShape(20.dp),
             modifier = Modifier

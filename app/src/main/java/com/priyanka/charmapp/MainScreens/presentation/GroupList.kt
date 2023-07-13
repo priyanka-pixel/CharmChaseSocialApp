@@ -54,8 +54,9 @@ fun GroupListView() {
     }
 }
 
+@SuppressLint("SuspiciousIndentation")
 fun fetchGroups(groupList: MutableList<Group>, loading: MutableState<Boolean>) {
-    val groupsRequest =  GroupsRequest.GroupsRequestBuilder().setLimit(30).build()
+    val groupsRequest =  GroupsRequest.GroupsRequestBuilder().setLimit(10).build()
 
         try {
             groupsRequest.fetchNext(object : CometChat.CallbackListener<List<Group?>?>() {
