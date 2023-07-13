@@ -9,5 +9,5 @@ data class UserProfile(
     var lastName: String = "",
     var aboutMe: String = "",
     var seeking: String = "",
-    val formattedDate: String = "",
+    var formattedDate: String = "",
 )

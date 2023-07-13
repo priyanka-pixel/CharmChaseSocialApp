@@ -26,6 +26,7 @@ import coil.compose.rememberImagePainter
 import com.cometchat.pro.models.User
 import com.priyanka.charmapp.MainScreens.presentation.Chats
 import com.priyanka.charmapp.MainScreens.presentation.GroupListView
+import com.priyanka.charmapp.MainScreens.presentation.More
 import com.priyanka.charmapp.MainScreens.presentation.Users
 import com.priyanka.charmapp.MainScreens.presentation.components.bottomBarHeight
 import com.priyanka.charmapp.MainScreens.presentation.components.icon
@@ -52,10 +53,18 @@ fun MainScreen(navController: NavController) {
         { section ->
             when (section) {
                 HomeSection.Chats -> Chats(navController)
-                HomeSection.Calls -> Content(title = "calls")
+//                HomeSection.Calls -> Content(title = "calls")
                 HomeSection.User -> Users()
                 HomeSection.Groups -> GroupListView()
-                HomeSection.More -> Content(title = "More")
+                HomeSection.More -> More(
+                    navController,
+                    profileImageUrl = "",
+                    onProfileImageClick = { /*TODO*/ },
+                    onSettingsClick = { /*TODO*/ },
+                    onAboutUsClick = { /*TODO*/ },
+                    onLogoutClick = { /*TODO*/ }) {
+
+                }
             }
         }
     }
@@ -155,8 +164,8 @@ private enum class HomeSection(
     val selectedIcon: Int
 ) {
     Chats(R.drawable.baseline_chat_bubble_outline_24, R.drawable.baseline_chat_bubble_24),
-    Calls(R.drawable.baseline_call_24,R.drawable.baseline_call_24),
-    User(R.drawable.baseline_person_24, R.drawable.baseline_person_24),
+//    Calls(R.drawable.baseline_call_24,R.drawable.baseline_call_24),
+  User(R.drawable.baseline_person_24, R.drawable.baseline_person_24),
     Groups(R.drawable.baseline_group_24,R.drawable.baseline_group_24),
     More(R.drawable.baseline_more_vert_24, R.drawable.baseline_more_vert_24)
 
