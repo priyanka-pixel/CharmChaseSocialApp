@@ -243,7 +243,11 @@ fun PersonalInfo(navController: NavController) {
                                     firstname = firstName,
                                     navController,
                                     imageurl = imageUrl,
-                                    onRegisterError = {}
+                                    onRegisterError = {},
+                                    onRegisterSuccess = {
+                                        val MainScreen = "MainScreen"
+                                        navController.navigate(MainScreen)
+                                    }
                                 )
                             }) {}
                     }
@@ -296,7 +300,7 @@ fun uploadFile(
             firestore.collection("users").document(uid).set(user).addOnSuccessListener {
                 // Handle successful Firestore update
                 onComplete{}
-                profileUserwithCometChat(uid, userProfile.displayName, navController,imageUrl,onComplete)
+                profileUserwithCometChat(uid, userProfile.displayName, navController,imageUrl,onComplete, onRegisterSuccess ={})
 
             }.addOnFailureListener { exception ->
                 // Handle Firestore update failure
@@ -326,7 +330,8 @@ private fun profileUserwithCometChat(
     firstname: String,
     navController: NavController,
     imageurl: String,
-    onRegisterError: (String) -> Unit
+    onRegisterError: (String) -> Unit,
+    onRegisterSuccess: (Any?) -> Unit,
 ) {
     val user = User()
     user.uid = uid.lowercase()
@@ -335,9 +340,8 @@ private fun profileUserwithCometChat(
     CometChat.createUser(user, apiKey, object : CometChat.CallbackListener<User>() {
         @SuppressLint("SuspiciousIndentation")
         override fun onSuccess(user: User) {
-            //  onRegisterComplete()
-          val mainScreen = "MainScreen"
-            navController.navigate(mainScreen)
+              onRegisterSuccess{}
+
         }
         override fun onError(e: CometChatException) {
             e.message?.let { onRegisterError(it) }

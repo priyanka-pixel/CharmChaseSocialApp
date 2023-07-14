@@ -81,7 +81,9 @@ fun ProfileImage(
                     uploadFile(navController,it,
                         imageBitmap,
                         userProfile = UserProfile(),
-                        onComplete = {}
+                        onComplete = {
+
+                        }
                     ) {}
                 }
             }

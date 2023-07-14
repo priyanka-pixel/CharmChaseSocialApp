@@ -171,6 +171,8 @@ fun LoginScreen(
             onClick = {
                 progressBarVisible.value = true
                 login(navController, email, password, onLoginError = {"Error"}, onLoginSuccess = {
+                    val MainScreen = "MainScreen"
+                    navController.navigate(MainScreen)
 
                 })
             },

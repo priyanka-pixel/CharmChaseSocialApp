@@ -157,7 +157,10 @@ fun SignUp(navController: NavController,
         )
         Button(
             onClick = {
-                registerUserwithFirebase(email, password, navController, onComplete = {}, onError = {})
+                registerUserwithFirebase(email, password, navController, onComplete = {
+                    val  PersonalInfo = "personalInfo"
+                    navController.navigate(PersonalInfo)
+                }, onError = {})
             },
             shape = RoundedCornerShape(20.dp),
             enabled = email.isNotEmpty() && password.isNotEmpty() && ConfirmPassword.isNotEmpty(),
@@ -253,10 +256,7 @@ private fun registerUserwithFirebase(
         .addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 onComplete()
-                val  PersonalInfo = "personalInfo"
-                navController.navigate(PersonalInfo)
-                //context.startActivity(Intent(context, ProfileActivity::class.java))
-               // task.result?.user?.uid?.let{onComplete()}
+                task.result?.user?.uid?.let{onComplete()}
             } else {
                 onError(task.exception?.message ?: "Error")
                 //onComplete(false, task.exception?.message)
