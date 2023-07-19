@@ -1,10 +1,12 @@
 package com.priyanka.charmapp.MainScreens.presentation
 
 import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.icu.text.SimpleDateFormat
 import android.util.Log
+import android.widget.EditText
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -37,9 +39,11 @@ import com.cometchat.pro.core.ConversationsRequest
 import com.cometchat.pro.exceptions.CometChatException
 import com.cometchat.pro.models.Conversation
 import com.cometchat.pro.models.Group
+import com.cometchat.pro.models.TextMessage
 import com.cometchat.pro.models.User
 import com.cometchat.pro.uikit.ui_components.messages.message_list.CometChatMessageListActivity
 import com.cometchat.pro.uikit.ui_resources.constants.UIKitConstants
+import org.json.JSONObject
 import java.util.*
 
 
@@ -115,7 +119,6 @@ fun SearchBar(modifier: Modifier = Modifier) {
         }
     }
 }
-
 
 fun fetchConversations(conversationList: MutableList<Conversation>, loading: MutableState<Boolean>) {
     val conversationsRequest = ConversationsRequest.ConversationsRequestBuilder().setLimit(20).build()
@@ -232,4 +235,15 @@ fun formatTime(timestamp: Long): String {
     return sdf.format(Date(timestamp))
 }
 
+private fun sendTextMessage(receiverID: String, messageText: String, receiverType: String) {
+    val textMessage = TextMessage(receiverID, messageText, receiverType)
+    CometChat.sendMessage(textMessage, object : CometChat.CallbackListener<TextMessage>() {
+        override fun onSuccess(textMessage: TextMessage) {
+            Log.d(TAG, "Message sent successfully: $textMessage")
+        }
 
+        override fun onError(e: CometChatException) {
+            Log.d(TAG, "Message sending failed with exception: " + e.message)
+        }
+    })
+}

@@ -300,7 +300,8 @@ fun uploadFile(
             firestore.collection("users").document(uid).set(user).addOnSuccessListener {
                 // Handle successful Firestore update
                 onComplete{}
-                profileUserwithCometChat(uid, userProfile.displayName, navController,imageUrl,onComplete, onRegisterSuccess ={})
+                profileUserwithCometChat(uid, userProfile.displayName, navController,imageUrl,onComplete, onRegisterSuccess ={val MainScreen = "MainScreen"
+                    navController.navigate(MainScreen)})
 
             }.addOnFailureListener { exception ->
                 // Handle Firestore update failure
@@ -338,9 +339,10 @@ private fun profileUserwithCometChat(
     user.name = firstname
     user.avatar = imageurl
     CometChat.createUser(user, apiKey, object : CometChat.CallbackListener<User>() {
-        @SuppressLint("SuspiciousIndentation")
         override fun onSuccess(user: User) {
-              onRegisterSuccess{}
+              onRegisterSuccess{loginWithCometChat(uid)}
+            val MainScreen = "MainScreen"
+            navController.navigate(MainScreen)
 
         }
         override fun onError(e: CometChatException) {

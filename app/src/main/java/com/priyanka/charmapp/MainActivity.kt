@@ -41,20 +41,14 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private lateinit var googleSignInClient: GoogleSignInClient
-    private lateinit var auth: FirebaseAuth
+   // private lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        //googlesignin
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestEmail()
-            .requestIdToken(getString(R.string.google_client_id))
-            .build()
-        googleSignInClient = GoogleSignIn.getClient(this, gso)
+
 
         //initialize with firebase
-        auth = FirebaseAuth.getInstance()
+       // auth = FirebaseAuth.getInstance()
 
 
         //initialize with cometchat
